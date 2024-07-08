@@ -25,9 +25,6 @@ class User(BaseModel, db.Model):
 
     @classmethod
     def validate_user_details(cls, details):
-        # email_regex = r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)"
-        # "*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
-
         errors = {
             'errors': []
         }

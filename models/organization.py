@@ -22,3 +22,20 @@ class Organization(BaseModel, db.Model):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.orgId = str(uuid.uuid4())
+
+    @classmethod
+    def validate_organization_details(cls, details):
+        errors = {
+            'errors': []
+        }
+
+        if not details.get('name'):
+            error = {
+                'field': 'name',
+                'message': 'Name is required'
+            }
+            errors['errors'].append(error)
+
+        if errors['errors']:
+            return errors
+        return False
