@@ -13,15 +13,9 @@ class Config:
     SECRET_KEY = getenv('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = getenv('JWT_SECRET_KEY')
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=10)
     JWT_BLACKLIST_ENABLED = True
     JWT_BLACKLIST_TOKEN_CHECKS = ['access']
-
-
-class DevelopmentConfig(Config):
-    """
-    Class defines the configurations that are specific to development
-    """
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=10)
     SQLALCHEMY_DATABASE_URI = "postgresql://{}:{}@{}:{}/{}".format(
         getenv('DATABASE_USERNAME'),
         getenv('DATABASE_PASSWORD'),
@@ -30,7 +24,19 @@ class DevelopmentConfig(Config):
         getenv('DATABASE'))
 
 
+class DevelopmentConfig(Config):
+    """
+    Class defines the configurations that are specific to development
+    """
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=15)
+
+
+class TestingConfig(Config):
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=1)
+
+
 config = {
     'default': DevelopmentConfig,
-    'development': DevelopmentConfig
+    'development': DevelopmentConfig,
+    'testing': TestingConfig
 }

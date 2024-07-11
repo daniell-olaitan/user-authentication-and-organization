@@ -63,8 +63,11 @@ def get_organizations():
 @api.route('/organisations/<orgId>', methods=['GET'])
 @jwt_required()
 def get_an_organisation(orgId):
+    user_id = get_jwt_identity()
+    user = User.query.filter_by(userId=user_id).first()
     organization = Organization.query.filter_by(orgId=orgId).first()
-    if organization:
+
+    if organization and organization in user.organizations:
         return jsonify({
             'status': 'success',
 		    'message': 'An organization has been fetched',

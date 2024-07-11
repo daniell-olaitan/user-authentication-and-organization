@@ -18,6 +18,15 @@ def check_if_token_is_blacklisted(jwt_header, jwt_payload):
     return InvalidToken.verify_jti(jti)
 
 
+@jwt.expired_token_loader
+def revoked_token_handler(jwt_header, jwt_loader):
+    return jsonify({
+        'status': 'Unauthorized request',
+        'message': 'The token has expired',
+        'statusCode': 401
+    }), 401
+
+
 @auth.route('/register', methods=['POST'])
 def register_user():
     try:
@@ -27,7 +36,7 @@ def register_user():
             return jsonify(user_validation_errors), 422
 
         organization = Organization(
-            name=user_details['firstName']+"'s"+' Organization',
+            name=user_details['firstName']+"'s"+' Organisation',
             description=None
         )
         user = User(**user_details)
