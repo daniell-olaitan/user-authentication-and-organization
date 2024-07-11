@@ -72,13 +72,6 @@ def login():
             if user.authenticate_user(login_details['password']):
                 access_token = create_access_token(identity=user.userId)
                 user_details = user.to_json()
-                # {
-                #     'userId': user.userId,
-                #     'firstName': user.firstName,
-                #     'lastName': user.lastName,
-                #     'email': user.email,
-                #     'phone': user.phone
-                # }
                 payload = {
                     'status': 'success',
                     'message': 'Login successful',

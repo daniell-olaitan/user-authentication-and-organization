@@ -37,7 +37,7 @@ def fetch_a_user(id):
     abort(404)
 
 
-@api.route('/organisations', methods=['GET', 'POST'])
+@api.route('/organisations', methods=['GET'])
 @jwt_required()
 def get_organizations():
     user_id = get_jwt_identity()
@@ -67,7 +67,7 @@ def get_an_organisation(orgId):
     if organization:
         return jsonify({
             'status': 'success',
-		    'message': "An organization has been fetched",
+		    'message': 'An organization has been fetched',
             'data': organization.to_json()
         }), 200
 
@@ -94,12 +94,30 @@ def create_an_organisation():
         if organization and user:
             user.organizations.append(organization)
             db.save(user)
+            organization = Organization.query.filter_by(orgId=organization.orgId).first()
             return jsonify({
                 'status': 'success',
-                'message': "An organization has been fetched",
+                'message': 'Organisation created successfully',
                 'data': organization.to_json()
-            }), 200
+            }), 201
         else:
             return jsonify(error_playload), 400
     except:
         return jsonify(error_playload), 400
+
+
+@api.route('/organisations/<orgId>/users', methods=['POST'])
+@jwt_required()
+def add_a_user_to_an_organisation(orgId):
+    user = request.get_json()
+    user_id = user.get('userId')
+    if user_id:
+        organization = Organization.query.filter_by(orgId=orgId).first()
+        user = User.query.filter_by(userId=user_id).first()
+        if user and organization:
+            organization.users.append(user)
+            return jsonify({
+                'status': 'success',
+                'message': 'User added to organisation successfully',
+            })
+    abort(404)
